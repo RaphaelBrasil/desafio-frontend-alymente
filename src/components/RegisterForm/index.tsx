@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import * as fs from "fs";
-import dados from "@/../public/dados.json";
+import Modal from "../Modal";
 
 interface dadosProps {
 	nome: string;
@@ -30,21 +29,45 @@ interface dadosProps {
 }
 
 interface RegisterFormProps {
-	enviarDadoPai: (valor: any) => void;
 	nomeDigitado: string;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
-	enviarDadoPai,
-	nomeDigitado
-}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ nomeDigitado }) => {
 	const [dado, setDado] = useState({});
+	const [aberto, setAberto] = useState(false);
 
-	const { register, handleSubmit, setValue } = useForm<dadosProps>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors }
+	} = useForm<dadosProps>();
 
 	const onSubmit: SubmitHandler<dadosProps> = (dadosFormulario) => {
+		setAberto(true);
 		setDado(dadosFormulario);
-		enviarDadoPai(dadosFormulario);
+		//ENVIO MOCK PARA API DO BANCO, NESSE LOCAL FARIAMOS UM ISERT APÓS O PREENCHIMENTO DO FORMULARIO
+		/*
+		const adicionarPessoa = async (pessoa) => {
+			const novaPessoa = pessoa;
+			try {
+				const response = await axios.post<Pessoa>(
+					"minha_url_da_api",
+					novaPessoa
+					);
+					console.log("Pessoa adicionada com sucesso:", response.data);
+				} catch (error) {
+					console.error("Erro ao adicionar pessoa:", error);
+				}
+			};
+
+			adicionarPessoa(valor);
+			*/
+	};
+
+	const handleOnClose = () => {
+		console.log("onclose");
+		setAberto(false);
 	};
 
 	const arrayCampos = [
@@ -88,10 +111,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 			<h2 className="w-full text-center text-2xl font-semibold mb-1">
 				Cadastro de Novo Usuário
 			</h2>
+			<div className={styleButtonContainer}>
+				<div>Todos os campos devem ser preenchidos</div>
+			</div>
+
 			{arrayCampos.map((campo: string) => (
 				<input
 					key={campo}
-					{...register(campo as keyof dadosProps)}
+					{...register(campo as keyof dadosProps, {
+						required: "Todos os campos devem ser preenchidos"
+					})}
 					placeholder={campo}
 					defaultValue={campo === "Nome" ? nomeDigitado : ""}
 					className={styleInput}
@@ -102,6 +131,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					Enviar
 				</button>
 			</div>
+			<Modal aberto={aberto} onClose={handleOnClose}>
+				<h2 className="w-full text-center text-2xl font-semibold mb-1 text-green-500">
+					Cadastro realizado com sucesso!
+				</h2>
+			</Modal>
 		</form>
 	);
 };

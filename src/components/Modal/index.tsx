@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({ aberto, onClose, children }) => {
 				>
 					<X />
 				</button>
-				<div className="max-h-[calc(75vh-2rem)] max-w-[calc(70vw-2rem)]">
+				<div className="max-h-[calc(80vh-2rem)] max-w-[calc(70vw-2rem)]">
 					{children}
 				</div>
 			</div>

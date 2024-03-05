@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Plus } from "react-feather";
 import Modal from "@/components/Modal";
 import RegisterForm from "@/components/RegisterForm";
 import CardWithModal from "@/components/CardWithModal";
@@ -17,14 +16,13 @@ export default function Home() {
 		setAberto(true);
 		setNomeDigitado(filtroNome);
 	};
-
+	/*
 	const receberDadoFilho = async (valor: any) => {
 		setNovoDado(valor);
-		// TODO: Enviar novo objeto para o 'BD' (Para o campo de alteração, deve-se apagar o objeto antigo, e adicionar o novo refeito)
 		console.log("VALOR RECEBIDO DO FORMULARIO:");
 		console.log(valor);
 	};
-
+	*/
 	const dadosFiltrados = dados.filter((pessoa) =>
 		pessoa.nome.toLowerCase().includes(filtroNome.toLowerCase())
 	);
@@ -60,10 +58,7 @@ export default function Home() {
 				))}
 			</div>
 			<Modal aberto={aberto} onClose={handleOnClose}>
-				<RegisterForm
-					enviarDadoPai={receberDadoFilho}
-					nomeDigitado={nomeDigitado}
-				/>
+				<RegisterForm nomeDigitado={nomeDigitado} />
 			</Modal>
 		</>
 	);
